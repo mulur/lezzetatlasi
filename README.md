@@ -32,6 +32,23 @@ Swagger/OpenAPI 3.0 formatında API spesifikasyonu:
 - 📖 Otomatik client kod üretimi için kullanılabilir
 - 🎯 Tüm endpoint'ler için şema tanımları
 
+### 4. [API Özeti ve CRUD Dağılımı](./API_SUMMARY.md)
+Hızlı referans dokümantasyonu:
+- 📈 Endpoint kategorileri ve HTTP method dağılımı
+- 🔄 Her kaynak için CRUD işlem detayları
+- ⚡ Özel özellikler (pre-signed URL, gurme kod sistemi)
+- 📊 Rate limiting stratejileri
+- 🎯 Performans optimizasyonları
+
+### 5. [Sistem Mimarisi](./ARCHITECTURE.md)
+Detaylı mimari tasarım ve akış diyagramları:
+- 🏗️ Sistem bileşenleri ve katmanları
+- 🔄 İstek akış diyagramları
+- 🔐 Rol bazlı erişim kontrolü görselleştirmesi
+- 📊 Puan hesaplama algoritması
+- 🚀 Production deployment mimarisi
+- 🛡️ Güvenlik katmanları
+
 ## 🎯 Özellikler
 
 ### Kullanıcı Rolleri
@@ -266,9 +283,11 @@ API dokümantasyonundan Postman collection oluşturabilirsiniz.
 ## 📖 Daha Fazla Bilgi
 
 Detaylı bilgi için ilgili dokümantasyon dosyalarına bakınız:
-- [API_DESIGN.md](./API_DESIGN.md) - Tüm endpoint detayları
-- [AUTHORIZATION_MATRIX.md](./AUTHORIZATION_MATRIX.md) - Yetkilendirme ve güvenlik
-- [openapi.yaml](./openapi.yaml) - OpenAPI spesifikasyonu
+- [API_DESIGN.md](./API_DESIGN.md) - Tüm endpoint detayları ve örnek request/response
+- [AUTHORIZATION_MATRIX.md](./AUTHORIZATION_MATRIX.md) - Yetkilendirme ve güvenlik matrisi
+- [openapi.yaml](./openapi.yaml) - OpenAPI 3.0 spesifikasyonu
+- [API_SUMMARY.md](./API_SUMMARY.md) - Hızlı referans ve CRUD dağılımı
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Sistem mimarisi ve akış diyagramları
 
 ## 📄 Lisans
 
