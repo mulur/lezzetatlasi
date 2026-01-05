@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="LezzetAtlasi.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:LezzetAtlasi.Views"
+    Shell.FlyoutBehavior="Disabled">
+
+    <!-- Main Tab Bar -->
+    <TabBar>
+        <ShellContent
+            Title="Keşfet"
+            ContentTemplate="{DataTemplate local:ExplorePage}"
+            Route="explore"
+            Icon="icon_explore.png" />
+
+        <ShellContent
+            Title="Harita"
+            ContentTemplate="{DataTemplate local:MapPage}"
+            Route="map"
+            Icon="icon_map.png" />
+
+        <ShellContent
+            Title="Gurme"
+            ContentTemplate="{DataTemplate local:GourmetPanelPage}"
+            Route="gourmet"
+            Icon="icon_gourmet.png" />
+
+        <ShellContent
+            Title="Profil"
+            ContentTemplate="{DataTemplate local:ProfilePage}"
+            Route="profile"
+            Icon="icon_profile.png" />
+    </TabBar>
+
+</Shell>

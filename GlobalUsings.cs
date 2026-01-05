@@ -1,0 +1,13 @@
+global using Microsoft.Maui;
+global using Microsoft.Maui.Controls;
+global using Microsoft.Maui.Controls.Xaml;
+global using Microsoft.Maui.Graphics;
+global using System.Collections.ObjectModel;
+global using System.ComponentModel;
+global using System.Runtime.CompilerServices;
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using LezzetAtlasi.ViewModels;
+global using LezzetAtlasi.Views;
+global using LezzetAtlasi.Models;
+global using LezzetAtlasi.Services;

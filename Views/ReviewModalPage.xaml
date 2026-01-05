@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.ReviewModalPage"
+             x:DataType="vm:ReviewModalViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="{Binding PlaceName}" FontSize="24" FontAttributes="Bold" />
+
+            <!-- Overall Rating -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Genel Puan" FontAttributes="Bold" />
+                <HorizontalStackLayout Spacing="10">
+                    <Slider Minimum="1" Maximum="5" Value="{Binding OverallRating}" 
+                            HorizontalOptions="FillAndExpand" />
+                    <Label Text="{Binding OverallRating, StringFormat='{0:F1}'}" WidthRequest="40" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Detailed Ratings -->
+            <Label Text="Detaylı Puanlama" FontAttributes="Bold" />
+            
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                <Label Grid.Row="0" Text="Yemek Kalitesi" />
+                <Slider Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="5" 
+                        Value="{Binding FoodQualityRating}" WidthRequest="200" />
+
+                <Label Grid.Row="1" Text="Servis Kalitesi" />
+                <Slider Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="5" 
+                        Value="{Binding ServiceQualityRating}" WidthRequest="200" />
+
+                <Label Grid.Row="2" Text="Atmosfer" />
+                <Slider Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="5" 
+                        Value="{Binding AmbianceRating}" WidthRequest="200" />
+
+                <Label Grid.Row="3" Text="Fiyat/Performans" />
+                <Slider Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="5" 
+                        Value="{Binding ValueForMoneyRating}" WidthRequest="200" />
+
+                <Label Grid.Row="4" Text="Temizlik" />
+                <Slider Grid.Row="4" Grid.Column="1" Minimum="1" Maximum="5" 
+                        Value="{Binding CleanlinessRating}" WidthRequest="200" />
+            </Grid>
+
+            <!-- Comment -->
+            <Label Text="Yorumunuz" FontAttributes="Bold" />
+            <Editor Text="{Binding Comment}" 
+                    Placeholder="Deneyiminizi paylaşın..."
+                    HeightRequest="150" />
+
+            <!-- Visit Date -->
+            <Label Text="Ziyaret Tarihi" FontAttributes="Bold" />
+            <DatePicker Date="{Binding VisitDate}" />
+
+            <!-- Photos -->
+            <Button Text="Fotoğraf Ekle" Command="{Binding AddPhotoCommand}" />
+            
+            <!-- Action Buttons -->
+            <Button Text="Gönder" Command="{Binding SubmitReviewCommand}" />
+            <Button Text="İptal" Command="{Binding CancelCommand}" 
+                    BackgroundColor="Transparent" TextColor="Gray" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
