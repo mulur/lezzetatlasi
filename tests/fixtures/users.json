@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "username": "yenigurme",
+      "email": "yeni@example.com",
+      "password": "$2b$10$hashedpassword",
+      "role": "reviewer",
+      "rank": "Yeni Gurme",
+      "reviewCount": 5,
+      "averageScore": 4.0,
+      "helpfulVotes": 8,
+      "createdAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "user-2",
+      "username": "masterchef",
+      "email": "master@example.com",
+      "password": "$2b$10$hashedpassword",
+      "role": "reviewer",
+      "rank": "Master Chef",
+      "reviewCount": 75,
+      "averageScore": 4.3,
+      "helpfulVotes": 250,
+      "createdAt": "2024-06-01T00:00:00Z"
+    },
+    {
+      "id": "user-3",
+      "username": "moderator",
+      "email": "mod@example.com",
+      "password": "$2b$10$hashedpassword",
+      "role": "moderator",
+      "rank": "Gurme",
+      "reviewCount": 30,
+      "averageScore": 4.1,
+      "permissions": ["moderate_reviews", "delete_spam", "view_reports"],
+      "createdAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "user-4",
+      "username": "admin",
+      "email": "admin@example.com",
+      "password": "$2b$10$hashedpassword",
+      "role": "admin",
+      "rank": "Elite Gurme",
+      "reviewCount": 150,
+      "averageScore": 4.5,
+      "permissions": ["all"],
+      "createdAt": "2023-01-01T00:00:00Z"
+    }
+  ],
+  "roles": {
+    "basic": {
+      "permissions": ["read"]
+    },
+    "reviewer": {
+      "permissions": ["read", "write_review", "vote_helpful"]
+    },
+    "moderator": {
+      "permissions": ["read", "write_review", "vote_helpful", "moderate_reviews", "delete_spam", "view_reports"]
+    },
+    "admin": {
+      "permissions": ["all"]
+    }
+  },
+  "ranks": [
+    {
+      "name": "Yeni Gurme",
+      "level": 1,
+      "minReviews": 0,
+      "minAverageScore": 0,
+      "color": "#95a5a6",
+      "benefits": ["Basic review features"]
+    },
+    {
+      "name": "Gurme",
+      "level": 2,
+      "minReviews": 10,
+      "minAverageScore": 3.5,
+      "minHelpfulVotes": 5,
+      "color": "#3498db",
+      "benefits": ["Profile badge", "Priority review display"]
+    },
+    {
+      "name": "Master Chef",
+      "level": 3,
+      "minReviews": 50,
+      "minAverageScore": 4.0,
+      "minHelpfulVotes": 50,
+      "color": "#9b59b6",
+      "benefits": ["Profile badge", "Priority review display", "Featured reviews", "Early access to features"]
+    },
+    {
+      "name": "Elite Gurme",
+      "level": 4,
+      "minReviews": 200,
+      "minAverageScore": 4.3,
+      "minHelpfulVotes": 200,
+      "color": "#f39c12",
+      "benefits": ["Profile badge", "Priority review display", "Featured reviews", "Early access to features", "Exclusive events", "Verified badge"]
+    }
+  ]
+}
