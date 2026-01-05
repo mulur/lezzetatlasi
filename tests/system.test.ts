@@ -26,7 +26,12 @@ describe('Invite Code System', () => {
       'adminpassword123',
       '127.0.0.1'
     );
-    adminUserId = adminResult.user!.id;
+    
+    if (!adminResult.success || !adminResult.user) {
+      throw new Error('Failed to create admin user');
+    }
+    
+    adminUserId = adminResult.user.id;
     await db.updateUser(adminUserId, { role: UserRole.ADMIN });
   });
 

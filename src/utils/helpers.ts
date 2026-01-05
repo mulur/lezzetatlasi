@@ -91,11 +91,14 @@ export function detectSuspiciousEmailPatterns(email: string): string[] {
 
 /**
  * Sanitize user input to prevent injection attacks
+ * Note: For production, consider using a comprehensive library like DOMPurify
  */
 export function sanitizeInput(input: string): string {
   return input
     .trim()
-    .replace(/[<>]/g, '') // Remove HTML tags
+    .replace(/[<>'"&]/g, '') // Remove potentially dangerous characters
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
     .substring(0, 255); // Limit length
 }
 

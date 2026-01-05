@@ -14,7 +14,7 @@ const { UserRole } = require('./dist/types');
 
 async function demo() {
   console.log('🎫 Lezzet Atlası - Invite Code & Security System Demo\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const db = Database.getInstance();
   const userService = new UserService();

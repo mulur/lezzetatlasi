@@ -80,6 +80,7 @@ export function gurmeMiddleware() {
  * Generate JWT token for user
  */
 export function generateToken(userId: string, role: UserRole): string {
+  // Type assertion needed due to TypeScript's strict type checking with jwt.SignOptions
   return jwt.sign(
     { userId, role },
     config.jwt.secret,

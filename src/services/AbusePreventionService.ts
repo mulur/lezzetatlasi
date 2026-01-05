@@ -192,8 +192,8 @@ export class AbusePreventionService {
     const badActor = await this.db.getBadActor(identifier);
     if (!badActor) return false;
 
-    // In a real implementation, you'd have a delete method
-    // For now, we can mark as not permanent with expired block time
+    // Mark as expired and non-permanent to effectively remove
+    // Note: In production with a real database, implement a proper delete method
     await this.db.addBadActor({
       ...badActor,
       permanent: false,
