@@ -1,0 +1,14 @@
+namespace LezzetAtlasi.Core.Entities;
+
+public class RefreshToken : BaseEntity
+{
+    public long UserId { get; set; }
+    public string Token { get; set; } = string.Empty;
+    public DateTime ExpiresAt { get; set; }
+    public bool IsRevoked { get; set; } = false;
+    public DateTime? RevokedAt { get; set; }
+    public string? ReplacedByToken { get; set; }
+    
+    // Navigation properties
+    public virtual ApplicationUser User { get; set; } = null!;
+}
