@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.ExplorePage"
+             x:DataType="vm:ExploreViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Search Bar -->
+        <SearchBar Grid.Row="0" 
+                   Placeholder="Mekan ara..."
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}" />
+
+        <!-- Category Filters -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HeightRequest="50">
+            <HorizontalStackLayout Spacing="10" Padding="10">
+                <CollectionView ItemsSource="{Binding Categories}" 
+                               SelectionMode="Single"
+                               SelectedItem="{Binding SelectedCategory}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="{StaticResource Primary}" Padding="15,8" StrokeShape="RoundRectangle 20">
+                                <Label Text="{Binding .}" />
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Places List -->
+        <RefreshView Grid.Row="2" 
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding LoadDataCommand}">
+            <CollectionView ItemsSource="{Binding Places}"
+                           SelectionMode="Single"
+                           SelectionChangedCommand="{Binding SelectPlaceCommand}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="10,5">
+                            <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto">
+                                <Image Grid.RowSpan="3" Source="placeholder.png" 
+                                       WidthRequest="100" HeightRequest="100" Aspect="AspectFill" />
+                                <Label Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding CuisineTypes}" />
+                                <HorizontalStackLayout Grid.Column="1" Grid.Row="2" Spacing="5">
+                                    <Label Text="★" TextColor="Gold" />
+                                    <Label Text="{Binding AverageRating}" />
+                                    <Label Text="{Binding PriceRange}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+
+</ContentPage>

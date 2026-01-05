@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+            <!-- Notifications Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Bildirimler" FontSize="18" FontAttributes="Bold" />
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Bildirimleri Etkinleştir" VerticalOptions="Center" 
+                           HorizontalOptions="StartAndExpand" />
+                    <Switch IsToggled="{Binding NotificationsEnabled}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Location Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Konum" FontSize="18" FontAttributes="Bold" />
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Konum Servislerini Etkinleştir" VerticalOptions="Center" 
+                           HorizontalOptions="StartAndExpand" />
+                    <Switch IsToggled="{Binding LocationEnabled}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Language Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Dil" FontSize="18" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Languages}" 
+                        SelectedItem="{Binding SelectedLanguage}" />
+            </VerticalStackLayout>
+
+            <!-- Favorite Cuisines -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Favori Mutfaklar" FontSize="18" FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding AvailableCuisines}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout Spacing="10" Padding="5">
+                                <CheckBox />
+                                <Label Text="{Binding .}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- Save Button -->
+            <Button Text="Ayarları Kaydet" Command="{Binding SaveSettingsCommand}" />
+
+            <!-- App Section -->
+            <VerticalStackLayout Spacing="10" Margin="0,20,0,0">
+                <Label Text="Uygulama" FontSize="18" FontAttributes="Bold" />
+                <Button Text="Önbelleği Temizle" Command="{Binding ClearCacheCommand}" 
+                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Start" />
+                <Button Text="Hakkında" Command="{Binding ShowAboutCommand}" 
+                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Start" />
+                <Button Text="Gizlilik Politikası" Command="{Binding ShowPrivacyPolicyCommand}" 
+                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Start" />
+                <Button Text="Kullanım Koşulları" Command="{Binding ShowTermsCommand}" 
+                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Start" />
+                <Button Text="Destek" Command="{Binding ContactSupportCommand}" 
+                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Start" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
