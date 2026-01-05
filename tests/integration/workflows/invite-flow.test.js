@@ -453,4 +453,3 @@ describe('Invite and Role Workflow Integration', () => {
     expect(updatedUser.body.role).toBe('admin');
   });
 });
-
