@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.OnboardingPage"
+             x:DataType="vm:OnboardingViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Carousel Area -->
+        <CarouselView Grid.Row="0" 
+                      ItemsSource="{Binding OnboardingItems}"
+                      CurrentItem="{Binding CurrentPage}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="40" Spacing="20" VerticalOptions="CenterAndExpand">
+                        <Image Source="{Binding ImageUrl}" 
+                               HeightRequest="300"
+                               Aspect="AspectFit" />
+                        <Label Text="{Binding Title}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="{Binding Description}"
+                               FontSize="16"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Gray" />
+                    </StackLayout>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- Bottom Buttons -->
+        <StackLayout Grid.Row="1" Padding="20" Spacing="10">
+            <Button Text="{Binding IsLastPage, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Başla|İleri'}"
+                    Command="{Binding NextCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White" />
+            <Button Text="Atla"
+                    Command="{Binding SkipCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    IsVisible="{Binding IsLastPage, Converter={StaticResource InvertedBoolConverter}}" />
+        </StackLayout>
+    </Grid>
+
+</ContentPage>
