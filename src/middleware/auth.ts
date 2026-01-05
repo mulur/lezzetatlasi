@@ -83,6 +83,6 @@ export function generateToken(userId: string, role: UserRole): string {
   return jwt.sign(
     { userId, role },
     config.jwt.secret,
-    { expiresIn: config.jwt.expiresIn }
+    { expiresIn: config.jwt.expiresIn } as jwt.SignOptions
   );
 }

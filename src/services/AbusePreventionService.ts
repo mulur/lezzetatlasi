@@ -1,9 +1,8 @@
-import { User, DuplicateAccountCheck, BadActorRecord } from '../types';
+import { DuplicateAccountCheck, BadActorRecord } from '../types';
 import { Database } from '../database';
 import { 
   calculateStringSimilarity, 
-  detectSuspiciousEmailPatterns,
-  hashIpAddress
+  detectSuspiciousEmailPatterns
 } from '../utils/helpers';
 import { config } from '../utils/config';
 

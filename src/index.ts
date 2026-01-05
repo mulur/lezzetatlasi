@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLoggerMiddleware());
 
 // Health check endpoint
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -41,7 +41,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // Error handler
-app.use((err: Error, req: Request, res: Response, next: any) => {
+app.use((err: Error, _req: Request, res: Response, _next: any) => {
   console.error('Error:', err);
   res.status(500).json({
     error: 'Internal server error',

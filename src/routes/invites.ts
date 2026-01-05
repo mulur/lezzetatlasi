@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { InviteCodeService } from '../services/InviteCodeService';
-import { authMiddleware, adminMiddleware, gurmeMiddleware, AuthRequest } from '../middleware/auth';
+import { authMiddleware, gurmeMiddleware, AuthRequest } from '../middleware/auth';
 import { rateLimitMiddleware } from '../middleware/security';
 import { AuditService } from '../services/AuditService';
 import { UserRole } from '../types';

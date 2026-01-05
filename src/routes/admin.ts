@@ -17,7 +17,7 @@ router.get(
   authMiddleware(),
   adminMiddleware(),
   rateLimitMiddleware('/api/admin/bad-actors'),
-  async (req: Request, res: Response): Promise<void> => {
+  async (_req: Request, res: Response): Promise<void> => {
     try {
       const badActors = await abusePreventionService.getAllBadActors();
 

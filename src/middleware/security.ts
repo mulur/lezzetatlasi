@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { Database } from '../database';
-import { RateLimitInfo } from '../types';
 import { config } from '../utils/config';
 import { AuditService } from '../services/AuditService';
 
