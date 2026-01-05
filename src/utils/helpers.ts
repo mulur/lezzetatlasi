@@ -5,11 +5,31 @@ import crypto from 'crypto';
  */
 export function generateInviteCode(length: number = 12): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed ambiguous characters
-  const bytes = crypto.randomBytes(length);
+  const charsLength = chars.length;
   let code = '';
   
-  for (let i = 0; i < length; i++) {
-    code += chars[bytes[i] % chars.length];
+  // Use random values without modulo bias
+  // Generate extra bytes to avoid bias in selection
+  const bytes = crypto.randomBytes(length * 2);
+  let byteIndex = 0;
+  
+  while (code.length < length && byteIndex < bytes.length) {
+    const randomValue = bytes[byteIndex];
+    // Only use values that don't cause modulo bias
+    // 256 / 32 = 8, so values 0-31 map evenly, reject 32-255
+    if (randomValue < charsLength * Math.floor(256 / charsLength)) {
+      code += chars[randomValue % charsLength];
+    }
+    byteIndex++;
+  }
+  
+  // Fallback if we run out of bytes (very unlikely)
+  while (code.length < length) {
+    const extraBytes = crypto.randomBytes(1);
+    const randomValue = extraBytes[0];
+    if (randomValue < charsLength * Math.floor(256 / charsLength)) {
+      code += chars[randomValue % charsLength];
+    }
   }
   
   // Format as XXXX-XXXX-XXXX for readability
@@ -91,14 +111,18 @@ export function detectSuspiciousEmailPatterns(email: string): string[] {
 
 /**
  * Sanitize user input to prevent injection attacks
- * Note: For production, consider using a comprehensive library like DOMPurify
+ * Note: For production, consider using a comprehensive library like DOMPurify or validator.js
  */
 export function sanitizeInput(input: string): string {
   return input
     .trim()
-    .replace(/[<>'"&]/g, '') // Remove potentially dangerous characters
+    // Remove dangerous characters and patterns
+    .replace(/[<>'"&]/g, '') // Remove HTML special characters
     .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/data:/gi, '') // Remove data: protocol
+    .replace(/vbscript:/gi, '') // Remove vbscript: protocol
+    .replace(/file:/gi, '') // Remove file: protocol
+    .replace(/\bon\w+\s*=/gi, '') // Remove event handlers (onclick=, onload=, etc)
     .substring(0, 255); // Limit length
 }
 

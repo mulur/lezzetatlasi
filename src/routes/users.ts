@@ -204,6 +204,7 @@ router.post(
 router.get(
   '/me',
   authMiddleware(),
+  rateLimitMiddleware('/api/users/me'),
   async (req: Request, res: Response): Promise<void> => {
     try {
       const authReq = req as AuthRequest;
