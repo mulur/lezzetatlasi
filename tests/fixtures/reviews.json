@@ -1,0 +1,141 @@
+{
+  "reviews": [
+    {
+      "id": "review-1",
+      "userId": "user-2",
+      "restaurantId": "rest-1",
+      "ratings": {
+        "taste": 5.0,
+        "service": 4.5,
+        "ambiance": 5.0,
+        "priceValue": 4.0,
+        "cleanliness": 5.0
+      },
+      "comment": "Mükemmel bir deneyimdi! Yemekler çok lezzetliydi, özellikle ana yemek harika. İstanbul manzarası eşsizdi. Kesinlikle tavsiye ederim.",
+      "photos": ["photo1.jpg", "photo2.jpg"],
+      "helpfulCount": 45,
+      "notHelpfulCount": 2,
+      "reported": 0,
+      "verified": true,
+      "createdAt": "2025-12-15T19:30:00Z"
+    },
+    {
+      "id": "review-2",
+      "userId": "user-1",
+      "restaurantId": "rest-2",
+      "ratings": {
+        "taste": 4.5,
+        "service": 4.0,
+        "ambiance": 4.0,
+        "priceValue": 5.0,
+        "cleanliness": 4.5
+      },
+      "comment": "Geleneksel Türk mutfağının harika örnekleri. Fiyat performans açısından çok iyi. Porsiyonlar doyurucu.",
+      "photos": ["photo3.jpg"],
+      "helpfulCount": 12,
+      "notHelpfulCount": 0,
+      "reported": 0,
+      "verified": true,
+      "createdAt": "2026-01-03T14:20:00Z"
+    },
+    {
+      "id": "review-3",
+      "userId": "user-1",
+      "restaurantId": "rest-4",
+      "ratings": {
+        "taste": 2.0,
+        "service": 2.5,
+        "ambiance": 2.0,
+        "priceValue": 3.5,
+        "cleanliness": 2.5
+      },
+      "comment": "Beklentilerimi karşılamadı. Yemekler soğuktu ve servis yavaştı.",
+      "photos": [],
+      "helpfulCount": 5,
+      "notHelpfulCount": 3,
+      "reported": 0,
+      "verified": false,
+      "createdAt": "2025-11-20T12:00:00Z"
+    },
+    {
+      "id": "review-4",
+      "userId": "user-2",
+      "restaurantId": "rest-1",
+      "ratings": {
+        "taste": 4.8,
+        "service": 4.7,
+        "ambiance": 4.9,
+        "priceValue": 4.3,
+        "cleanliness": 5.0
+      },
+      "comment": "Her zaman olduğu gibi muhteşem. Chef Mehmet'in yeni menüsü harika. Rezervasyon yapmanızı şiddetle tavsiye ederim.",
+      "photos": ["photo4.jpg", "photo5.jpg", "photo6.jpg"],
+      "helpfulCount": 38,
+      "notHelpfulCount": 1,
+      "reported": 0,
+      "verified": true,
+      "createdAt": "2025-10-05T20:15:00Z"
+    },
+    {
+      "id": "review-5",
+      "userId": "user-3",
+      "restaurantId": "rest-2",
+      "ratings": {
+        "taste": 4.7,
+        "service": 4.2,
+        "ambiance": 3.8,
+        "priceValue": 4.8,
+        "cleanliness": 4.3
+      },
+      "comment": "Çiya her zaman güvenilir bir seçenek. Kebapları ve mezeler harika. Hafta sonları biraz kalabalık olabiliyor.",
+      "photos": [],
+      "helpfulCount": 22,
+      "notHelpfulCount": 1,
+      "reported": 0,
+      "verified": true,
+      "createdAt": "2025-09-10T13:45:00Z"
+    }
+  ],
+  "reviewTemplates": {
+    "perfect": {
+      "ratings": {
+        "taste": 5.0,
+        "service": 5.0,
+        "ambiance": 5.0,
+        "priceValue": 5.0,
+        "cleanliness": 5.0
+      },
+      "comment": "Mükemmel bir deneyimdi!"
+    },
+    "good": {
+      "ratings": {
+        "taste": 4.0,
+        "service": 4.0,
+        "ambiance": 4.0,
+        "priceValue": 4.0,
+        "cleanliness": 4.0
+      },
+      "comment": "Genel olarak iyi bir deneyimdi."
+    },
+    "average": {
+      "ratings": {
+        "taste": 3.0,
+        "service": 3.0,
+        "ambiance": 3.0,
+        "priceValue": 3.0,
+        "cleanliness": 3.0
+      },
+      "comment": "İdare eder seviyesinde."
+    },
+    "poor": {
+      "ratings": {
+        "taste": 2.0,
+        "service": 2.0,
+        "ambiance": 2.0,
+        "priceValue": 2.0,
+        "cleanliness": 2.0
+      },
+      "comment": "Beklentilerimi karşılamadı."
+    }
+  }
+}

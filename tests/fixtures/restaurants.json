@@ -1,0 +1,95 @@
+{
+  "restaurants": [
+    {
+      "id": "rest-1",
+      "name": "Mikla",
+      "cuisine": "Turkish-Scandinavian Fusion",
+      "address": "Meşrutiyet Caddesi, No:15, Beyoğlu, İstanbul",
+      "phone": "+90-212-293-5656",
+      "priceRange": "$$$$",
+      "gurmeScore": 92.5,
+      "reviewCount": 234,
+      "averageRatings": {
+        "taste": 4.7,
+        "service": 4.6,
+        "ambiance": 4.8,
+        "priceValue": 4.2,
+        "cleanliness": 4.9
+      },
+      "verified": true,
+      "createdAt": "2023-01-15T00:00:00Z"
+    },
+    {
+      "id": "rest-2",
+      "name": "Çiya Sofrası",
+      "cuisine": "Traditional Turkish",
+      "address": "Caferağa Mahallesi, Kadıköy, İstanbul",
+      "phone": "+90-216-330-3190",
+      "priceRange": "$$",
+      "gurmeScore": 88.0,
+      "reviewCount": 567,
+      "averageRatings": {
+        "taste": 4.6,
+        "service": 4.3,
+        "ambiance": 4.0,
+        "priceValue": 4.5,
+        "cleanliness": 4.4
+      },
+      "verified": true,
+      "createdAt": "2023-02-20T00:00:00Z"
+    },
+    {
+      "id": "rest-3",
+      "name": "Yeni Açılan Mekan",
+      "cuisine": "Italian",
+      "address": "Nişantaşı, İstanbul",
+      "phone": "+90-212-555-0000",
+      "priceRange": "$$$",
+      "gurmeScore": null,
+      "reviewCount": 0,
+      "averageRatings": null,
+      "verified": false,
+      "createdAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "rest-4",
+      "name": "Tartışmalı Restoran",
+      "cuisine": "Fast Food",
+      "address": "Mecidiyeköy, İstanbul",
+      "phone": "+90-212-555-1111",
+      "priceRange": "$",
+      "gurmeScore": 65.0,
+      "reviewCount": 100,
+      "averageRatings": {
+        "taste": 3.5,
+        "service": 3.0,
+        "ambiance": 3.2,
+        "priceValue": 4.0,
+        "cleanliness": 3.3
+      },
+      "verified": true,
+      "polarized": true,
+      "createdAt": "2024-05-10T00:00:00Z"
+    }
+  ],
+  "cuisineTypes": [
+    "Turkish",
+    "Italian",
+    "French",
+    "Japanese",
+    "Chinese",
+    "Mediterranean",
+    "Fast Food",
+    "Seafood",
+    "Steakhouse",
+    "Vegetarian",
+    "Vegan",
+    "Fusion"
+  ],
+  "priceRanges": {
+    "$": "0-50 TL",
+    "$$": "50-150 TL",
+    "$$$": "150-300 TL",
+    "$$$$": "300+ TL"
+  }
+}
