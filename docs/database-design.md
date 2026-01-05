@@ -704,9 +704,10 @@ CREATE INDEX idx_user_active_login ON Users(is_active, last_login, username);
 CREATE INDEX idx_gourmet_leaderboard ON GourmetProfile(total_score DESC, total_reviews, user_id);
 
 -- Spatial indeksler (konum bazlı sorgular için)
--- MySQL 5.7+ ve MariaDB 10.2.2+ için:
-ALTER TABLE Places ADD SPATIAL INDEX idx_location_spatial (location);
--- location sütunu POINT tipinde olmalı
+-- Not: Mevcut şemada latitude ve longitude ayrı sütunlar olarak tutulmaktadır.
+-- Spatial index kullanmak için POINT sütunu eklenmelidir:
+-- ALTER TABLE Places ADD COLUMN location POINT GENERATED ALWAYS AS (POINT(longitude, latitude)) STORED;
+-- ALTER TABLE Places ADD SPATIAL INDEX idx_location_spatial (location);
 
 -- Partitioning (büyük tablolar için)
 -- PriceHistory tablosu için yıllık partitioning örneği:

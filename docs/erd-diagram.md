@@ -4,6 +4,8 @@ Bu dosya, Lezzet Atlası veritabanı yapısının görsel temsilini içerir.
 
 ## ERD - Mermaid Diyagramı
 
+> **Not:** Karmaşık ERD diyagramları GitHub üzerinde düzgün render edilmeyebilir. En iyi görselleştirme için [Mermaid Live Editor](https://mermaid.live/) kullanmanızı öneririz. Aşağıdaki kodu kopyalayıp editöre yapıştırabilirsiniz.
+
 ```mermaid
 erDiagram
     Users ||--o{ InviteCodes : "creates"

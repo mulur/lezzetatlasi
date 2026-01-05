@@ -349,6 +349,11 @@ CREATE TABLE PlaceRatingSummary (
 -- INITIAL DATA: GOURMET RANKS
 -- ============================================================================
 
+-- Note: Benefits are stored as JSON for flexibility. In production, consider:
+-- 1. Moving this data to a configuration file or admin panel for easier updates
+-- 2. Adding JSON schema validation at the application level
+-- 3. Using a separate RankBenefits table for better normalization if needed
+
 INSERT INTO GourmetRanks (name, min_score, max_score, color, icon, benefits, display_order) VALUES
 ('Yeni Keşifçi', 0.00, 100.00, '#95A5A6', 'compass', 
  '{"daily_reviews": 5, "photo_uploads": 10, "invite_codes": 0}', 1),
@@ -469,7 +474,8 @@ CREATE TRIGGER after_menuitem_price_update
 AFTER UPDATE ON MenuItems
 FOR EACH ROW
 BEGIN
-    IF OLD.price != NEW.price OR OLD.currency != NEW.currency THEN
+    -- Use ABS for safer DECIMAL comparison (avoid floating-point precision issues)
+    IF ABS(COALESCE(OLD.price, 0) - COALESCE(NEW.price, 0)) > 0.001 OR OLD.currency != NEW.currency THEN
         INSERT INTO PriceHistory (menu_item_id, price, currency)
         VALUES (NEW.id, NEW.price, NEW.currency);
     END IF;
