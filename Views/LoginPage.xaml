@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="40" Spacing="20" VerticalOptions="Center">
+            <Label Text="Lezzet Atlası"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+            
+            <Label Text="Hoş Geldiniz"
+                   FontSize="18"
+                   HorizontalTextAlignment="Center"
+                   TextColor="Gray" />
+
+            <Entry Placeholder="E-posta"
+                   Text="{Binding Email}"
+                   Keyboard="Email" />
+
+            <Entry Placeholder="Şifre"
+                   Text="{Binding Password}"
+                   IsPassword="True" />
+
+            <CheckBox IsChecked="{Binding RememberMe}" />
+            <Label Text="Beni Hatırla" />
+
+            <Button Text="Giriş Yap"
+                    Command="{Binding LoginCommand}"
+                    BackgroundColor="{StaticResource Primary}" />
+
+            <Button Text="Şifremi Unuttum"
+                    Command="{Binding ForgotPasswordCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}" />
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                <Label Text="Hesabınız yok mu?" />
+                <Label Text="Kayıt Ol"
+                       TextColor="{StaticResource Primary}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToRegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

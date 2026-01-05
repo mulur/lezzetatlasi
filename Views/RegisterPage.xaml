@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Entry Placeholder="Ad" Text="{Binding FirstName}" />
+            <Entry Placeholder="Soyad" Text="{Binding LastName}" />
+            <Entry Placeholder="E-posta" Text="{Binding Email}" Keyboard="Email" />
+            <Entry Placeholder="Telefon" Text="{Binding PhoneNumber}" Keyboard="Telephone" />
+            <Entry Placeholder="Şifre" Text="{Binding Password}" IsPassword="True" />
+            <Entry Placeholder="Şifre Tekrar" Text="{Binding ConfirmPassword}" IsPassword="True" />
+            
+            <HorizontalStackLayout Spacing="10">
+                <CheckBox IsChecked="{Binding AcceptTerms}" />
+                <Label Text="Kullanım koşullarını kabul ediyorum" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Text="Kayıt Ol" Command="{Binding RegisterCommand}" />
+            <Button Text="Zaten hesabım var" Command="{Binding NavigateToLoginCommand}" 
+                    BackgroundColor="Transparent" TextColor="{StaticResource Primary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

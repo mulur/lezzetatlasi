@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.GourmetActivationPage"
+             x:DataType="vm:GourmetActivationViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Label Text="Gurme Başvurusu" FontSize="24" FontAttributes="Bold" />
+            <Label Text="Gurme kullanıcı olarak deneyimlerinizi paylaşın ve topluluğa liderlik edin." />
+
+            <Entry Placeholder="Görünen Ad" Text="{Binding DisplayName}" />
+            <Editor Placeholder="Biyografi (Kendinizi tanıtın)" Text="{Binding Bio}" HeightRequest="100" />
+            <Editor Placeholder="Deneyiminizi açıklayın" Text="{Binding ExperienceDescription}" HeightRequest="150" />
+
+            <Label Text="Uzmanlık Alanları:" FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding AvailableSpecializations}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <HorizontalStackLayout Spacing="10" Padding="5">
+                            <CheckBox />
+                            <Label Text="{Binding .}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Picker Title="Doğrulama Tipi" 
+                    ItemsSource="{Binding VerificationTypes}"
+                    SelectedItem="{Binding SelectedVerificationType}" />
+
+            <Button Text="Başvuruyu Gönder" Command="{Binding SubmitApplicationCommand}" />
+            <Button Text="İptal" Command="{Binding CancelCommand}" 
+                    BackgroundColor="Transparent" TextColor="Gray" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

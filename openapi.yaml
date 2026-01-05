@@ -1,0 +1,1756 @@
+openapi: 3.0.3
+info:
+  title: Lezzetatlası API
+  description: |
+    Lezzetatlası (Taste Atlas) REST API - Restoran değerlendirme ve gurme inceleme platformu
+    
+    ## Özellikler
+    - 🔐 JWT tabanlı kimlik doğrulama
+    - 👥 Rol bazlı yetkilendirme (Guest, User, Gourmet, Admin)
+    - 🏪 Restoran CRUD işlemleri
+    - ⭐ İki seviyeli değerlendirme sistemi (basit ve gurme)
+    - 📸 Pre-signed URL ile fotoğraf yükleme
+    - 🔍 Gelişmiş arama, filtreleme ve pagination
+    - 📊 Rate limiting ve güvenlik
+    
+    ## Roller
+    - **Guest**: Kayıtsız kullanıcı (sadece okuma)
+    - **User**: Kayıtlı kullanıcı (basit yorum/puan)
+    - **Gourmet**: Özel kod ile kayıtlı gurme (detaylı değerlendirme)
+    - **Admin**: Sistem yöneticisi (tam yetki)
+    
+  version: 1.0.0
+  contact:
+    name: Lezzetatlası API Support
+    email: api@lezzetatlasi.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.lezzetatlasi.com/v1
+    description: Production server
+  - url: https://staging-api.lezzetatlasi.com/v1
+    description: Staging server
+  - url: http://localhost:3000/v1
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: Kimlik doğrulama ve kullanıcı kaydı
+  - name: Users
+    description: Kullanıcı profil yönetimi
+  - name: Restaurants
+    description: Restoran CRUD işlemleri
+  - name: Reviews
+    description: Değerlendirme ve yorum sistemi
+  - name: Photos
+    description: Fotoğraf yükleme ve yönetimi
+  - name: Search
+    description: Arama ve keşfet
+  - name: Admin
+    description: Admin yönetim işlemleri
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Normal kullanıcı kaydı
+      description: Yeni bir kullanıcı hesabı oluşturur
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Kayıt başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /auth/register/gourmet:
+    post:
+      tags:
+        - Authentication
+      summary: Gurme kullanıcı kaydı
+      description: Özel gurme kodu ile gurme kullanıcı kaydı oluşturur
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GourmetRegisterRequest'
+      responses:
+        '201':
+          description: Gurme kaydı başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GourmetRegisterResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Giriş yapma
+      description: Email ve şifre ile sisteme giriş yapar
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Giriş başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Token yenileme
+      description: Refresh token ile yeni access token alır
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token yenilendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Çıkış yapma
+      description: Sistemden çıkış yapar ve token'ı geçersiz kılar
+      responses:
+        '200':
+          description: Çıkış başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Kendi profilini görüntüleme
+      description: Giriş yapmış kullanıcının kendi profil bilgilerini getirir
+      responses:
+        '200':
+          description: Profil bilgileri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    patch:
+      tags:
+        - Users
+      summary: Profil güncelleme
+      description: Kullanıcı profil bilgilerini günceller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profil güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    delete:
+      tags:
+        - Users
+      summary: Hesap silme
+      description: Kullanıcı hesabını kalıcı olarak siler
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: Doğrulama için şifre
+                reason:
+                  type: string
+                  description: Hesap silme nedeni
+              required:
+                - password
+      responses:
+        '200':
+          description: Hesap silindi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Kullanıcı profili görüntüleme
+      description: Belirtilen kullanıcının genel profil bilgilerini getirir
+      security: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kullanıcı ID'si
+      responses:
+        '200':
+          description: Kullanıcı profili
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /restaurants:
+    get:
+      tags:
+        - Restaurants
+      summary: Restoran listesi
+      description: Filtrelenebilir ve sayfalanabilir restoran listesi
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/OrderParam'
+        - name: city
+          in: query
+          schema:
+            type: string
+          description: Şehir filtresi
+        - name: cuisine
+          in: query
+          schema:
+            type: string
+          description: Mutfak türü filtresi
+        - name: minRating
+          in: query
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+          description: Minimum puan filtresi
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Arama terimi
+      responses:
+        '200':
+          description: Restoran listesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantListResponse'
+    
+    post:
+      tags:
+        - Restaurants
+      summary: Restoran oluşturma
+      description: Yeni restoran ekler (Sadece Admin)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRestaurantRequest'
+      responses:
+        '201':
+          description: Restoran oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /restaurants/{restaurantId}:
+    get:
+      tags:
+        - Restaurants
+      summary: Restoran detayı
+      description: Belirtilen restoranın detaylı bilgilerini getirir
+      security: []
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Restoran ID'si
+      responses:
+        '200':
+          description: Restoran detayı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantDetailResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    patch:
+      tags:
+        - Restaurants
+      summary: Restoran güncelleme
+      description: Restoran bilgilerini günceller (Sadece Admin)
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRestaurantRequest'
+      responses:
+        '200':
+          description: Restoran güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      tags:
+        - Restaurants
+      summary: Restoran silme
+      description: Restoranı siler (Soft delete, Sadece Admin)
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Restoran silindi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /restaurants/{restaurantId}/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Yorum listesi
+      description: Restoran için yapılan tüm yorumları getirir
+      security: []
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [recent, highest, lowest]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [all, user, gourmet]
+      responses:
+        '200':
+          description: Yorum listesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    post:
+      tags:
+        - Reviews
+      summary: Basit yorum ekleme
+      description: Restoran için basit yorum ekler (User ve Gourmet)
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: Yorum eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /restaurants/{restaurantId}/reviews/gourmet:
+    post:
+      tags:
+        - Reviews
+      summary: Gurme değerlendirmesi
+      description: Detaylı gurme değerlendirmesi ekler (Sadece Gourmet)
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGourmetReviewRequest'
+      responses:
+        '201':
+          description: Gurme değerlendirmesi eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GourmetReviewResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /reviews/{reviewId}:
+    patch:
+      tags:
+        - Reviews
+      summary: Yorum güncelleme
+      description: Yorumu günceller (Sadece yorum sahibi)
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRequest'
+      responses:
+        '200':
+          description: Yorum güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      tags:
+        - Reviews
+      summary: Yorum silme
+      description: Yorumu siler (Yorum sahibi veya Admin)
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Yorum silindi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reviews/{reviewId}/helpful:
+    post:
+      tags:
+        - Reviews
+      summary: Yorumu yararlı bulma
+      description: Yorumu yararlı olarak işaretler
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: İşaretlendi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      reviewId:
+                        type: string
+                      helpfulCount:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /photos/upload-url:
+    post:
+      tags:
+        - Photos
+      summary: Fotoğraf yükleme URL'si isteme
+      description: Fotoğraf yüklemek için pre-signed URL alır
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhotoUploadUrlRequest'
+      responses:
+        '200':
+          description: Upload URL oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhotoUploadUrlResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /photos/{photoId}/confirm:
+    post:
+      tags:
+        - Photos
+      summary: Fotoğraf yükleme onayı
+      description: S3'e yüklenen fotoğrafı onaylar ve sisteme kaydeder
+      parameters:
+        - name: photoId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Fotoğraf kaydedildi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhotoResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /restaurants/{restaurantId}/photos:
+    get:
+      tags:
+        - Photos
+      summary: Restoran fotoğrafları
+      description: Restorana ait fotoğrafları listeler
+      security: []
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [recent, popular]
+      responses:
+        '200':
+          description: Fotoğraf listesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhotoListResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /photos/{photoId}:
+    delete:
+      tags:
+        - Photos
+      summary: Fotoğraf silme
+      description: Fotoğrafı siler (Sahibi veya Admin)
+      parameters:
+        - name: photoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fotoğraf silindi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Genel arama
+      description: Restoranlar, kullanıcılar ve yorumlarda arama yapar
+      security: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Arama terimi
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [restaurant, user, review]
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Arama sonuçları
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+
+  /restaurants/nearby:
+    get:
+      tags:
+        - Search
+      summary: Yakındaki restoranlar
+      description: Konum bazlı yakın restoran arama
+      security: []
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Latitude
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Longitude
+        - name: radius
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: Yarıçap (km)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Yakındaki restoranlar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearbyRestaurantsResponse'
+
+  /admin/users:
+    get:
+      tags:
+        - Admin
+      summary: Kullanıcı listesi
+      description: Tüm kullanıcıları listeler (Sadece Admin)
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [user, gourmet, admin]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kullanıcı listesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/users/{userId}/role:
+    patch:
+      tags:
+        - Admin
+      summary: Kullanıcı rolü güncelleme
+      description: Kullanıcının rolünü değiştirir (Sadece Admin)
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [user, gourmet, admin]
+                reason:
+                  type: string
+              required:
+                - role
+      responses:
+        '200':
+          description: Rol güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/users/{userId}/status:
+    patch:
+      tags:
+        - Admin
+      summary: Kullanıcı durumu güncelleme
+      description: Kullanıcıyı askıya alır veya aktifleştirir (Sadece Admin)
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                reason:
+                  type: string
+              required:
+                - isActive
+      responses:
+        '200':
+          description: Durum güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/gourmet-codes:
+    post:
+      tags:
+        - Admin
+      summary: Gurme kodu oluşturma
+      description: Yeni gurme kodları oluşturur (Sadece Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                expiresAt:
+                  type: string
+                  format: date-time
+                note:
+                  type: string
+              required:
+                - quantity
+      responses:
+        '201':
+          description: Kodlar oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GourmetCodesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/statistics:
+    get:
+      tags:
+        - Admin
+      summary: Sistem istatistikleri
+      description: Genel sistem istatistiklerini getirir (Sadece Admin)
+      responses:
+        '200':
+          description: İstatistikler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatisticsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token ile kimlik doğrulama
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Sayfa numarası
+    
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Sayfa başına sonuç sayısı
+    
+    SortParam:
+      name: sort
+      in: query
+      schema:
+        type: string
+      description: Sıralama alanı
+    
+    OrderParam:
+      name: order
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+      description: Sıralama yönü
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+
+    RegisterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            userId:
+              type: string
+            email:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            role:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    GourmetRegisterRequest:
+      allOf:
+        - $ref: '#/components/schemas/RegisterRequest'
+        - type: object
+          required:
+            - gourmetCode
+          properties:
+            gourmetCode:
+              type: string
+            expertise:
+              type: array
+              items:
+                type: string
+            certification:
+              type: string
+            bio:
+              type: string
+
+    GourmetRegisterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            userId:
+              type: string
+            email:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            role:
+              type: string
+            gourmetProfile:
+              type: object
+              properties:
+                expertise:
+                  type: array
+                  items:
+                    type: string
+                certification:
+                  type: string
+                verifiedAt:
+                  type: string
+                  format: date-time
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            expiresIn:
+              type: integer
+            tokenType:
+              type: string
+            user:
+              type: object
+              properties:
+                userId:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+
+    RefreshTokenResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            expiresIn:
+              type: integer
+
+    UserProfileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            userId:
+              type: string
+            email:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            phone:
+              type: string
+            role:
+              type: string
+            profilePhoto:
+              type: string
+            stats:
+              type: object
+              properties:
+                reviewCount:
+                  type: integer
+                photoCount:
+                  type: integer
+                followersCount:
+                  type: integer
+                followingCount:
+                  type: integer
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+
+    PublicUserProfile:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            userId:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            role:
+              type: string
+            profilePhoto:
+              type: string
+            bio:
+              type: string
+            stats:
+              type: object
+            createdAt:
+              type: string
+              format: date-time
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        bio:
+          type: string
+        city:
+          type: string
+
+    CreateRestaurantRequest:
+      type: object
+      required:
+        - name
+        - city
+        - address
+        - cuisine
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        cuisine:
+          type: array
+          items:
+            type: string
+        city:
+          type: string
+        district:
+          type: string
+        address:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+        phone:
+          type: string
+        website:
+          type: string
+        email:
+          type: string
+        priceRange:
+          type: string
+          enum: ['$', '$$', '$$$', '$$$$']
+        openingHours:
+          type: object
+        features:
+          type: array
+          items:
+            type: string
+
+    UpdateRestaurantRequest:
+      type: object
+      properties:
+        description:
+          type: string
+        phone:
+          type: string
+        openingHours:
+          type: object
+
+    RestaurantResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            restaurantId:
+              type: string
+            name:
+              type: string
+            slug:
+              type: string
+            city:
+              type: string
+            rating:
+              type: object
+              properties:
+                overall:
+                  type: number
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    RestaurantListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            restaurants:
+              type: array
+              items:
+                type: object
+            pagination:
+              $ref: '#/components/schemas/PaginationInfo'
+
+    RestaurantDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            restaurantId:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            cuisine:
+              type: array
+              items:
+                type: string
+            rating:
+              type: object
+            photos:
+              type: array
+              items:
+                type: object
+            recentReviews:
+              type: array
+              items:
+                type: object
+
+    CreateReviewRequest:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+        visitDate:
+          type: string
+          format: date
+        wouldRecommend:
+          type: boolean
+
+    CreateGourmetReviewRequest:
+      type: object
+      required:
+        - ratings
+      properties:
+        ratings:
+          type: object
+          properties:
+            food:
+              type: number
+            presentation:
+              type: number
+            service:
+              type: number
+            ambiance:
+              type: number
+            value:
+              type: number
+            overall:
+              type: number
+        detailedReview:
+          type: object
+          properties:
+            summary:
+              type: string
+            foodQuality:
+              type: string
+            presentation:
+              type: string
+            service:
+              type: string
+            ambiance:
+              type: string
+            recommendations:
+              type: array
+              items:
+                type: string
+            improvements:
+              type: array
+              items:
+                type: string
+        visitDate:
+          type: string
+          format: date
+        occasion:
+          type: string
+        groupSize:
+          type: integer
+        wouldRecommend:
+          type: boolean
+
+    UpdateReviewRequest:
+      type: object
+      properties:
+        rating:
+          type: number
+        comment:
+          type: string
+
+    ReviewResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            reviewId:
+              type: string
+            restaurantId:
+              type: string
+            userId:
+              type: string
+            rating:
+              type: number
+            comment:
+              type: string
+            type:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    GourmetReviewResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            reviewId:
+              type: string
+            type:
+              type: string
+            ratings:
+              type: object
+            detailedReview:
+              type: object
+            verifiedGourmet:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    ReviewListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: object
+            pagination:
+              $ref: '#/components/schemas/PaginationInfo'
+            summary:
+              type: object
+              properties:
+                totalReviews:
+                  type: integer
+                userReviews:
+                  type: integer
+                gourmetReviews:
+                  type: integer
+                averageRating:
+                  type: number
+
+    PhotoUploadUrlRequest:
+      type: object
+      required:
+        - restaurantId
+        - fileName
+        - fileType
+        - fileSize
+      properties:
+        restaurantId:
+          type: string
+        fileName:
+          type: string
+        fileType:
+          type: string
+        fileSize:
+          type: integer
+        caption:
+          type: string
+
+    PhotoUploadUrlResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            uploadUrl:
+              type: string
+            photoId:
+              type: string
+            expiresIn:
+              type: integer
+            method:
+              type: string
+            headers:
+              type: object
+        message:
+          type: string
+
+    PhotoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            photoId:
+              type: string
+            url:
+              type: string
+            thumbnail:
+              type: string
+            caption:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+            restaurantId:
+              type: string
+            uploadedBy:
+              type: string
+            status:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+        message:
+          type: string
+
+    PhotoListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            photos:
+              type: array
+              items:
+                type: object
+            pagination:
+              $ref: '#/components/schemas/PaginationInfo'
+
+    SearchResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            results:
+              type: array
+              items:
+                type: object
+            pagination:
+              $ref: '#/components/schemas/PaginationInfo'
+
+    NearbyRestaurantsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            restaurants:
+              type: array
+              items:
+                type: object
+            center:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+            radius:
+              type: number
+
+    AdminUserListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: object
+            pagination:
+              $ref: '#/components/schemas/PaginationInfo'
+
+    GourmetCodesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            codes:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  expiresAt:
+                    type: string
+                    format: date-time
+                  isUsed:
+                    type: boolean
+                  createdAt:
+                    type: string
+                    format: date-time
+            totalGenerated:
+              type: integer
+
+    StatisticsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            users:
+              type: object
+            restaurants:
+              type: object
+            reviews:
+              type: object
+            photos:
+              type: object
+
+    PaginationInfo:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+        itemsPerPage:
+          type: integer
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: string
+            field:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
+            requestId:
+              type: string
+
+  responses:
+    BadRequest:
+      description: Geçersiz istek
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Unauthorized:
+      description: Kimlik doğrulama gerekli
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Forbidden:
+      description: Yetki yok
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    NotFound:
+      description: Kaynak bulunamadı
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Conflict:
+      description: Çakışma
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
