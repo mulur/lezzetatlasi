@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.MapPage"
+             x:DataType="vm:MapViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Map placeholder - In real app, use Microsoft.Maui.Controls.Maps -->
+        <Frame Grid.Row="0" BackgroundColor="LightGray">
+            <Label Text="Harita Görünümü&#x0a;(Harita kontrolü buraya entegre edilecek)"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   FontSize="18" />
+        </Frame>
+
+        <!-- Bottom Sheet with Places -->
+        <Frame Grid.Row="1" Padding="0" CornerRadius="20" IsVisible="{Binding ShowPlacesList}">
+            <CollectionView ItemsSource="{Binding NearbyPlaces}"
+                           HeightRequest="200"
+                           SelectionMode="Single"
+                           SelectionChangedCommand="{Binding SelectPlaceCommand}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10" ColumnDefinitions="80,*,Auto">
+                            <Image Source="placeholder.png" WidthRequest="80" HeightRequest="80" />
+                            <VerticalStackLayout Grid.Column="1" Padding="10,0">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <Label Text="{Binding Address}" FontSize="12" TextColor="Gray" />
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="★" TextColor="Gold" />
+                                    <Label Text="{Binding AverageRating}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text=">" FontSize="24" VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+        <!-- Map Controls -->
+        <VerticalStackLayout Grid.Row="0" HorizontalOptions="End" VerticalOptions="End" 
+                            Padding="20" Spacing="10">
+            <Button Text="+" Command="{Binding ZoomInCommand}" WidthRequest="50" HeightRequest="50" />
+            <Button Text="-" Command="{Binding ZoomOutCommand}" WidthRequest="50" HeightRequest="50" />
+            <Button Text="📍" Command="{Binding CenterOnCurrentLocationCommand}" 
+                    WidthRequest="50" HeightRequest="50" />
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

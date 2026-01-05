@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LezzetAtlasi.ViewModels"
+             x:Class="LezzetAtlasi.Views.GourmetPanelPage"
+             x:DataType="vm:GourmetPanelViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Not Gourmet View -->
+            <VerticalStackLayout IsVisible="{Binding IsGourmet, Converter={StaticResource InvertedBoolConverter}}"
+                                Spacing="20" Padding="40" VerticalOptions="Center">
+                <Label Text="Gurme Olun!" FontSize="28" FontAttributes="Bold" 
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Gurme kullanıcı olarak deneyimlerinizi paylaşın ve topluluğa öncülük edin."
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Başvuru Yap" Command="{Binding ActivateGourmetCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Gourmet View -->
+            <VerticalStackLayout IsVisible="{Binding IsGourmet}" Spacing="20">
+                <!-- Gourmet Profile Header -->
+                <Frame Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="{Binding GourmetProfile.DisplayName}" 
+                               FontSize="24" FontAttributes="Bold" />
+                        <Label Text="{Binding GourmetProfile.Bio}" TextColor="Gray" />
+                        
+                        <!-- Stats -->
+                        <Grid ColumnDefinitions="*,*,*" Padding="0,20,0,0">
+                            <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                <Label Text="{Binding GourmetProfile.Stats.TotalReviews}" 
+                                       FontSize="20" FontAttributes="Bold" 
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Yorum" HorizontalTextAlignment="Center" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                <Label Text="{Binding GourmetProfile.Stats.FollowersCount}" 
+                                       FontSize="20" FontAttributes="Bold" 
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Takipçi" HorizontalTextAlignment="Center" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Grid.Column="2" Spacing="5">
+                                <Label Text="{Binding GourmetProfile.Stats.PlacesVisited}" 
+                                       FontSize="20" FontAttributes="Bold" 
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Mekan" HorizontalTextAlignment="Center" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Button Text="Profili Düzenle" Command="{Binding EditProfileCommand}" 
+                                Margin="0,10,0,0" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- My Reviews -->
+                <Label Text="Yorumlarım" FontSize="20" FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding MyReviews}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="15" Margin="0,5">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding PlaceId}" FontAttributes="Bold" />
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Label Text="★" TextColor="Gold" />
+                                        <Label Text="{Binding Rating}" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding Comment}" MaxLines="2" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy}'}" 
+                                           FontSize="12" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
