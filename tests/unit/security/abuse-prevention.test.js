@@ -11,6 +11,11 @@ const {
   checkMultiAccounting 
 } = require('../../../src/security/abuse-prevention');
 
+const { 
+  calculateAbuseScore,
+  getActionRecommendation
+} = require('../../helpers/test-setup');
+
 describe('Rate Limiting', () => {
   describe('Normal Usage', () => {
     it('should allow requests within rate limit', async () => {
@@ -434,19 +439,3 @@ describe('Abuse Score Calculation', () => {
   });
 });
 
-// Helper function that would be in the actual implementation
-function calculateAbuseScore(user) {
-  let score = 0;
-  score += (user.rateLimit?.violations || 0) * 5;
-  score += (user.spam?.detections || 0) * 10;
-  score += (user.reports || 0) * 2;
-  score += (user.suspensions || 0) * 20;
-  return Math.min(score, 100);
-}
-
-function getActionRecommendation(score) {
-  if (score >= 90) return { action: 'ban', reason: 'Severe abuse detected' };
-  if (score >= 70) return { action: 'suspend', reason: 'Multiple violations' };
-  if (score >= 40) return { action: 'warning', reason: 'Suspicious activity' };
-  return { action: 'monitor', reason: 'Low risk' };
-}

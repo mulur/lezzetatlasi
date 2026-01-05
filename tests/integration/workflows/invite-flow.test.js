@@ -5,7 +5,14 @@
 
 const request = require('supertest');
 const app = require('../../../src/app');
-const { setupTestDatabase, cleanupTestDatabase } = require('../../helpers/test-setup');
+const { 
+  setupTestDatabase, 
+  cleanupTestDatabase,
+  getAuthToken,
+  createTestUser,
+  createTestInvite,
+  createExpiredInvite
+} = require('../../helpers/test-setup');
 
 describe('Invite System Integration Tests', () => {
   let adminToken, regularUserToken, inviteCode;
@@ -447,23 +454,3 @@ describe('Invite and Role Workflow Integration', () => {
   });
 });
 
-// Helper functions
-async function getAuthToken(role) {
-  // Mock implementation - would actually authenticate and return token
-  return `mock-token-${role}`;
-}
-
-async function createTestUser() {
-  // Mock implementation
-  return 'test-user-123';
-}
-
-async function createTestInvite(adminToken) {
-  // Mock implementation
-  return { inviteCode: 'test-invite-code' };
-}
-
-async function createExpiredInvite() {
-  // Mock implementation
-  return { code: 'expired-invite-code' };
-}

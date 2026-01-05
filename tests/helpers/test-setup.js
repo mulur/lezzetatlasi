@@ -250,6 +250,48 @@ const mockEmailService = {
   }
 };
 
+// Abuse prevention helpers (for testing abuse prevention logic)
+function calculateAbuseScore(user) {
+  let score = 0;
+  score += (user.rateLimit?.violations || 0) * 5;
+  score += (user.spam?.detections || 0) * 10;
+  score += (user.reports || 0) * 2;
+  score += (user.suspensions || 0) * 20;
+  return Math.min(score, 100);
+}
+
+function getActionRecommendation(score) {
+  if (score >= 90) return { action: 'ban', reason: 'Severe abuse detected' };
+  if (score >= 70) return { action: 'suspend', reason: 'Multiple violations' };
+  if (score >= 40) return { action: 'warning', reason: 'Suspicious activity' };
+  return { action: 'monitor', reason: 'Low risk' };
+}
+
+// Mock authentication functions (for integration tests)
+async function getAuthToken(role = 'reviewer') {
+  // Mock implementation - would actually authenticate and return token
+  return `mock-token-${role}`;
+}
+
+async function createTestUser(overrides = {}) {
+  // Mock implementation
+  const user = generateMockUser(overrides);
+  return user.id;
+}
+
+async function createTestInvite(adminToken, overrides = {}) {
+  // Mock implementation
+  return generateMockInvite(overrides);
+}
+
+async function createExpiredInvite() {
+  // Mock implementation
+  const invite = generateMockInvite({
+    expiresAt: new Date(Date.now() - 1000).toISOString() // Already expired
+  });
+  return invite;
+}
+
 // Export all helpers
 module.exports = {
   // Database
@@ -267,6 +309,10 @@ module.exports = {
   // Authentication
   generateMockToken,
   authenticateTestUser,
+  getAuthToken,
+  createTestUser,
+  createTestInvite,
+  createExpiredInvite,
   
   // Assertions
   expectValidGurmeScore,
@@ -285,6 +331,10 @@ module.exports = {
   
   // Spam detection
   generateSimilarContent,
+  
+  // Abuse prevention
+  calculateAbuseScore,
+  getActionRecommendation,
   
   // Mock services
   mockEmailService
