@@ -1,0 +1,43 @@
+# Ignore build outputs
+**/bin/
+**/obj/
+**/out/
+
+# Ignore IDE settings
+.vs/
+.vscode/
+.idea/
+
+# Ignore user-specific files
+*.user
+*.suo
+
+# Ignore test results
+**/TestResults/
+
+# Ignore packages
+**/packages/
+
+# Ignore migration snapshots (regenerate as needed)
+**/Migrations/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Redis dumps
+*.rdb
